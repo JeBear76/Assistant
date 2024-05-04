@@ -31,6 +31,26 @@ load_dotenv()
         #     h.join()
 
 def main():
+    """
+    The main function of the Jarvis program.
+    
+    This function performs the following steps:
+    1. Initializes the DeepgramAssistant with a default voice.
+    2. Changes the voice if specified by the user.
+    3. Plays a greeting message.
+    4. Prompts the user to select a microphone device.
+    5. Records audio from the selected microphone.
+    6. Uses DeepgramAssistant to transcribe the recorded audio.
+    7. Passes the transcribed message to GroqAssistant for processing.
+    8. Uses DeepgramAssistant to speak the response from GroqAssistant.
+    9. Plays the response audio.
+    
+    Note: This function assumes the existence of the following classes:
+    - DeepgramAssistant: A class for interacting with the Deepgram speech recognition API.
+    - Audio: A class for playing audio files.
+    - Recorder: A class for recording audio from a microphone.
+    - GroqAssistant: A class for processing user queries and generating responses.
+    """
     try:
         DEBUG = False
         deepgramAssistant = DeepgramAssistant(voice="aura-helios-en")

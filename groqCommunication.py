@@ -6,13 +6,42 @@ from groq import Groq
 from utils import prettyDict
 
 class GroqAssistant:
+    """
+    A class representing a Groq Assistant.
+
+    Attributes:
+        Debug (bool): A flag indicating whether debug mode is enabled.
+        client (Groq): An instance of the Groq client.
+
+    Methods:
+        chat(message): Sends a chat message to the Groq Assistant and returns the response.
+
+    """
+
     def __init__(self, DEBUG=False):
+        """
+        Initializes a new instance of the GroqAssistant class.
+
+        Args:
+            DEBUG (bool, optional): A flag indicating whether debug mode is enabled. Defaults to False.
+
+        """
         self.Debug = DEBUG
         self.client = Groq(
             api_key=os.getenv("GROQ_API_KEY"),
         )
 
     def chat(self, message):
+        """
+        Sends a chat message to the Groq Assistant and returns the response.
+
+        Args:
+            message (str): The message to send to the Groq Assistant.
+
+        Returns:
+            str: The response from the Groq Assistant.
+
+        """
         chat_completion = self.client.chat.completions.create(
             messages=[
                 {

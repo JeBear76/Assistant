@@ -13,15 +13,53 @@ speakOptions = SpeakOptions(
     )
 
 class DeepgramAssistant:
+    """
+    A class that represents a Deepgram Assistant.
+
+    Attributes:
+        client (DeepgramClient): The Deepgram client used for communication.
+        Debug (bool): A flag indicating whether debug mode is enabled.
+
+    Methods:
+        __init__(self, DEBUG=False, voice="aura-asteria-en"): Initializes a new instance of the DeepgramAssistant class.
+        changeVoice(self, voice): Changes the voice model used for speech synthesis.
+        speak(self, message, filename='./talk.wav'): Generates speech from the given message and saves it to a file.
+        listen(self, filename): Transcribes the audio from the given file.
+
+    """
+
     def __init__(self, DEBUG=False, voice="aura-asteria-en"):
+        """
+        Initializes a new instance of the DeepgramAssistant class.
+
+        Args:
+            DEBUG (bool, optional): A flag indicating whether debug mode is enabled. Defaults to False.
+            voice (str, optional): The voice model to use for speech synthesis. Defaults to "aura-asteria-en".
+        """
         self.client = DeepgramClient(api_key=os.getenv('DEEPGRAM_API_KEY'))
         speakOptions.model = voice
         self.Debug=DEBUG
 
     def changeVoice(self, voice):
+        """
+        Changes the voice model used for speech synthesis.
+
+        Args:
+            voice (str): The voice model to use.
+        """
         speakOptions.model = voice
         
     def speak(self, message, filename='./talk.wav'):
+        """
+        Generates speech from the given message and saves it to a file.
+
+        Args:
+            message (str): The message to convert to speech.
+            filename (str, optional): The filename to save the speech to. Defaults to './talk.wav'.
+
+        Returns:
+            response: The response object from the Deepgram API.
+        """
         speakSource = {
             "text": message
         }
@@ -32,6 +70,15 @@ class DeepgramAssistant:
         return response
 
     def listen(self, filename):        
+        """
+        Transcribes the audio from the given file.
+
+        Args:
+            filename (str): The filename of the audio file to transcribe.
+
+        Returns:
+            response: The response object from the Deepgram API.
+        """
         with open(filename, "rb") as file:
             buffer_data = file.read()
 
