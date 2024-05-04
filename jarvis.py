@@ -1,11 +1,11 @@
-import os
 import argparse
-import sounddevice as sd
-
 from dotenv import load_dotenv
-from deepgram import DeepgramClient, SpeakOptions, PrerecordedOptions, FileSource
 from audio import Audio
 from record import Recorder, selectMicrophone
+from deepgramCommunication import DeepgramAssistant
+from groqCommunication import GroqAssistant
+
+# from pynput import keyboard
 
 parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
@@ -15,58 +15,51 @@ args, remaining = parser.parse_known_args()
 
 load_dotenv()
 
-freq = 44100    # Sample frequency
+# def on_activate_h():
+#     print('<ctrl>+<alt>+h pressed')
 
-key = os.getenv('DEEPGRAM_API_KEY')
-
-speak_prompt = {"text": "Hello, how are you doing today?"}
+# def on_activate_i():
+#     print('<ctrl>+<alt>+i pressed')
+        
+# with keyboard.GlobalHotKeys({
+        #         '<ctrl>+<alt>+h': on_activate_h,
+        #         '<ctrl>+<alt>+i': on_activate_i}) as h:
+        #     h.join()
 
 def main():
     try:
+        DEBUG = False
         audio = Audio()
+        audio.play('./greet.wav')
         device = 1
-        
-        # # Play the 'talk.wav' file
-        # audio.play('./talk.wav')
         if args.select_device == 1:
             device = selectMicrophone()
 
-        print(f'key:{key}')
-
-        while True:
-                
-        # Record the audio
         rec = Recorder(device)
-        rec.record()
-        # Play the 'output.wav' file
-        print('Playing')
-        audio.play('./output.wav')
+        deepgramAssistant = DeepgramAssistant()
+        groqAssistant = GroqAssistant(DEBUG)
 
-        client = DeepgramClient(api_key=key)
+        # Record the audio
+        filename = './output.wav'
+        rec.record(filename=filename)
         
-        preRecordedOptions = PrerecordedOptions(
-            model='nova-2',            
-            smart_format=True
-            )
+        # For Testing - Play the 'output.wav' file
+        if DEBUG:
+            print('Playing')
+            audio.play(filename)
 
-        speakOptions = SpeakOptions(
-            model='aura-asteria-en', 
-            encoding='linear16', 
-            container='wav'
-            )
+        response = deepgramAssistant.listen(filename=filename)
 
-        with open("./output.wav", "rb") as file:
-            buffer_data = file.read()
+        chatMessage = response.results.channels[0].alternatives[0].transcript
+        if DEBUG:
+            print(chatMessage)
+        
+        groqResponse = groqAssistant.chat(chatMessage)
+        if DEBUG:
+            print(groqResponse)
 
-        payload: FileSource = {
-            "buffer": buffer_data,
-        }
-
-        response = client.listen.prerecorded.v("1").transcribe_file(payload, preRecordedOptions)
-        # response = client.speak.v('1').save('./talk.wav', speak_prompt, speakOptions)
-
-        print(response.to_json(indent=2))
-
+        deepgramAssistant.speak(groqResponse)
+        audio.play('./talk.wav')
     except Exception as e:
         print(e)
 

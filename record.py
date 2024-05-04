@@ -1,19 +1,13 @@
 import queue
 import sys
+import time
 
 import sounddevice as sd
 import soundfile as sf
 import numpy # Make sure NumPy is loaded before it is used in the callback
 assert numpy # avoid "imported but unused" message (W0611)
 
-def pretty(d, indent=0):
-    for key, value in d.items():
-      print('\t' * indent + str(key))
-      if isinstance(value, dict):
-         pretty(value, indent+1)
-      else:
-         print('\t' * (indent+1) + str(value))
-    print('\n')
+from utils import prettyDict
 
 def selectMicrophone():
     # Query available audio devices
@@ -21,7 +15,7 @@ def selectMicrophone():
 
     # Print the available devices
     for device in devices:
-        print(pretty(device))
+        print(prettyDict(device))
 
     # Prompt the user to enter the microphone device number
     microphone = input('Enter the microphone device number: ')
@@ -48,14 +42,18 @@ class Recorder:
         
         self.q.put(indata.copy())
 
-    def record(self):
+    def record(self, filename='./output.wav'):
         try:
-            with sf.SoundFile('./output.wav', mode='w', samplerate=44100,
+            with sf.SoundFile(filename, mode='w', samplerate=44100,
                             channels=self.channels) as file:
                 with sd.InputStream(samplerate=self.samplerate, device=self.device,
                                     channels=self.channels, callback=self.callback):
+                    t = time.time()
                     while True:
                         file.write(self.q.get())
+                        if time.time() - t > 10:
+                            break
         except KeyboardInterrupt:
-            print('\nRecording finished')
+            pass
+        print('\nRecording finished')
                        

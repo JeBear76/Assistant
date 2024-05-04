@@ -25,7 +25,6 @@ class Audio:
         self.stream.stop_stream()  
         self.stream.close()  
         self.f.close()
-        self.p.terminate()
 
     def stop(self):
         if not self.stream.is_stopped:

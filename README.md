@@ -6,6 +6,8 @@
 - `pip install wavio`
 - `pip install soundfile`
 - `pip install sounddevice`
+- `pip install groq`
+- `pip install pynput`
 
 ## Pulse Audio Setup for WLS2
 - Download [PulseAudio](http://bosmans.ch/pulseaudio/pulseaudio-1.1.zip)
