@@ -1,4 +1,8 @@
 # Assistant
+## APIs
+- [deepgram](https://deepgram.com/)
+- [groq](https://groq.com/)
+
 ## Python dependencies
 - `pip install python-dotenv`
 - `pip install deepgram-sdk`
