@@ -29,6 +29,10 @@ load_dotenv()
 def main():
     try:
         DEBUG = False
+        greeting = 'What do you want? I\'m busy!'
+        deepgramAssistant = DeepgramAssistant(voice="aura-helios-en")
+        deepgramAssistant.speak(greeting, './greet.wav')
+        
         audio = Audio()
         audio.play('./greet.wav')
         device = 1
@@ -36,7 +40,6 @@ def main():
             device = selectMicrophone()
 
         rec = Recorder(device)
-        deepgramAssistant = DeepgramAssistant()
         groqAssistant = GroqAssistant(DEBUG)
 
         # Record the audio
