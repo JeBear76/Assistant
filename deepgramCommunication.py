@@ -18,6 +18,9 @@ class DeepgramAssistant:
         speakOptions.model = voice
         self.Debug=DEBUG
 
+    def changeVoice(self, voice):
+        speakOptions.model = voice
+        
     def speak(self, message, filename='./talk.wav'):
         speakSource = {
             "text": message

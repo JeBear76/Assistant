@@ -11,6 +11,10 @@ parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
     '-s', '--select_device', action='store_const', const=1,
     help='select a device from a list of audio devices')
+parser.add_argument(
+    '-v', '--voice', action='store', default='aura-helios-en',
+    help='change the voice to the assistant'
+)
 args, remaining = parser.parse_known_args()
 
 load_dotenv()
@@ -29,10 +33,12 @@ load_dotenv()
 def main():
     try:
         DEBUG = False
-        greeting = 'What do you want? I\'m busy!'
         deepgramAssistant = DeepgramAssistant(voice="aura-helios-en")
-        deepgramAssistant.speak(greeting, './greet.wav')
-        
+        if args.voice != 'aura-helios-en':
+            greeting = 'What do you want? I\'m busy!' 
+            deepgramAssistant.changeVoice(args.voice)           
+            deepgramAssistant.speak(greeting, './greet.wav')
+
         audio = Audio()
         audio.play('./greet.wav')
         device = 1
