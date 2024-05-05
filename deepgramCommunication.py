@@ -1,5 +1,5 @@
 import os
-from deepgram import DeepgramClient, SpeakOptions, PrerecordedOptions
+from deepgram import DeepgramClient, SpeakOptions, PrerecordedOptions, FileSource
 import logging
 logger = logging.getLogger(__name__)
 

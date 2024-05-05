@@ -1,4 +1,5 @@
 {
     "voice": "aura-helios-en",
-    "text": "What do you want? I'm busy!"
+    "greeting": "What do you want? I'm busy!",
+    "device": 1
 }

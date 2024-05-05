@@ -8,18 +8,22 @@ logger = logging.getLogger(__name__)
 class Assistant:
     def __init__(self, config, regenerateGreeting, DEBUG=False):
         self.DEBUG = DEBUG
-        self.deepgramAssistant = DeepgramAssistant(voice=config.voice)
+        self.greeting = config['greeting']
+        self.deepgramAssistant = DeepgramAssistant(voice=config['voice'])
         if regenerateGreeting:
-            self.deepgramAssistant.speak(config.greeting, './greet.wav')        
+            self.deepgramAssistant.speak(self.greeting, './greet.wav')
         self.audio = Audio()
-        self.rec = Recorder(config.device)
+        self.rec = Recorder(config['device'])
         self.groqAssistant = GroqAssistant(self.DEBUG)
+
+    def __del__(self):
+        del self.audio
+        del self.rec
 
     def greet(self):
         self.audio.play('./greet.wav')        
 
     def record_audio(self, filename='./output.wav'):
-        self.audio.play('./assets/ready.wav')
         self.rec.record(filename=filename)
         return filename
 
@@ -42,7 +46,7 @@ class Assistant:
 
     def mainLoop(self):
         try:
-            self.initialize()
+            self.audio.play('./assets/ready.wav')
             filename = self.record_audio()
             chatMessage = self.transcribe_audio(filename)
             assistantMessage = self.process_message(chatMessage)
