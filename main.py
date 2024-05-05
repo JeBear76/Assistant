@@ -8,8 +8,6 @@ from record import Recorder, selectMicrophone
 from deepgramCommunication import DeepgramAssistant
 from groqCommunication import GroqAssistant
 
-# from pynput import keyboard
-
 DEFAULT_GREETING = 'What do you want? I\'m busy!'
 DEFAULT_VOICE = 'aura-helios-en'
 
@@ -31,16 +29,6 @@ args, remaining = parser.parse_known_args()
 
 load_dotenv()
 
-# def on_activate_h():
-#     print('<ctrl>+<alt>+h pressed')
-
-# def on_activate_i():
-#     print('<ctrl>+<alt>+i pressed')
-        
-# with keyboard.GlobalHotKeys({
-        #         '<ctrl>+<alt>+h': on_activate_h,
-        #         '<ctrl>+<alt>+i': on_activate_i}) as h:
-        #     h.join()
 
 def main():
     """
