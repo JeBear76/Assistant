@@ -1,5 +1,7 @@
 import os
-from deepgram import DeepgramClient, SpeakOptions, PrerecordedOptions, FileSource
+from deepgram import DeepgramClient, SpeakOptions, PrerecordedOptions
+import logging
+logger = logging.getLogger(__name__)
 
 preRecordedOptions = PrerecordedOptions(
     model='nova-2',            
@@ -47,6 +49,7 @@ class DeepgramAssistant:
         Args:
             voice (str): The voice model to use.
         """
+        logger.info(f"Changing voice to {voice}")
         speakOptions.model = voice
         
     def speak(self, message, filename='./talk.wav'):
@@ -60,10 +63,12 @@ class DeepgramAssistant:
         Returns:
             response: The response object from the Deepgram API.
         """
+        logger.info(f"Speaking: {message}")
         speakSource = {
             "text": message
         }
         response = self.client.speak.v('1').save(filename, speakSource, speakOptions)
+        logger.info(f"Speech saved response:\n{response.to_json(indent=2)}")
         if self.Debug:
             print(response.to_json(indent=2))
 
@@ -79,6 +84,7 @@ class DeepgramAssistant:
         Returns:
             response: The response object from the Deepgram API.
         """
+        logger.info(f"Listening to {filename}")
         with open(filename, "rb") as file:
             buffer_data = file.read()
 
@@ -87,6 +93,7 @@ class DeepgramAssistant:
         }
 
         response = self.client.listen.prerecorded.v("1").transcribe_file(payload, preRecordedOptions)
+        logger.info(f"Transcription response:\n{response.to_json(indent=2)}")
         if self.Debug:
             print(response.to_json(indent=2))
 

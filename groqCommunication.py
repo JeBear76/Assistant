@@ -1,7 +1,7 @@
-
 import os
-
 from groq import Groq
+import logging
+logger = logging.getLogger(__name__)
 
 from utils import prettyDict
 
@@ -42,6 +42,7 @@ class GroqAssistant:
             str: The response from the Groq Assistant.
 
         """
+        logger.info(f"Sending chat message: {message}")
         chat_completion = self.client.chat.completions.create(
             messages=[
                 {
@@ -58,6 +59,7 @@ class GroqAssistant:
             temperature=1.0,
             top_p=1.0,
         )
+        logger.info(f"Received chat response:\n{chat_completion}")
         if self.Debug:
             print(chat_completion)
 

@@ -6,6 +6,8 @@ import sounddevice as sd
 import soundfile as sf
 import numpy # Make sure NumPy is loaded before it is used in the callback
 assert numpy # avoid "imported but unused" message (W0611)
+import logging
+logger = logging.getLogger(__name__)
 
 from utils import prettyDict
 
@@ -43,6 +45,7 @@ class Recorder:
 
     def __init__(self, device=1, channels=2, samplerate=44100, DEBUG=False):
         sd.default.device = device
+        logger.info(f'default microphone:{sd.default.device}')
         if DEBUG:
             print(f'default microphone:{sd.default.device}')
         self.q = queue.Queue()
@@ -81,6 +84,7 @@ class Recorder:
         Returns:
             None
         """
+        logger.info(f'Recording audio to {filename}')
         try:
             with sf.SoundFile(filename, mode='w', samplerate=44100,
                               channels=self.channels) as file:
@@ -93,5 +97,6 @@ class Recorder:
                             break
         except KeyboardInterrupt:
             pass
+        logger.info('Recording finished')
         print('\nRecording finished')
                        

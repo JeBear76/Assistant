@@ -1,6 +1,8 @@
 import pyaudio  
 import wave  
 from time import sleep
+import logging
+logger = logging.getLogger(__name__)
 
 class Audio:
     """
@@ -33,6 +35,7 @@ class Audio:
         Raises:
             FileNotFoundError: If the audio file is not found.
         """
+        logger.info(f"Playing audio file: {path}")
         self.f = wave.open(path, "rb")
         self.stream = self.p.open(format=self.p.get_format_from_width(self.f.getsampwidth()),
                                   channels=self.f.getnchannels(),
@@ -44,12 +47,12 @@ class Audio:
             data = self.f.readframes(self.chunk)
 
         sleep(0.5)
-
+        logger.info("Audio playback complete.")
         self.stream.stop_stream()
         self.stream.close()
         self.f.close()
 
-    def stop(self):
+    def __del__(self):
         """
         Stops the audio playback and closes the audio stream.
         """

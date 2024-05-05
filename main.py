@@ -1,5 +1,6 @@
 import argparse
 import logging
+logger = logging.getLogger(__name__)
 
 from dotenv import load_dotenv
 from audio import Audio
@@ -26,6 +27,7 @@ parser.add_argument(
     help='change the assistant\'s greeting message'
 )
 args, remaining = parser.parse_known_args()
+
 
 load_dotenv()
 
@@ -62,6 +64,7 @@ def main():
     - GroqAssistant: A class for processing user queries and generating responses.
     """
     try:
+        logging.basicConfig(filename='./assistant.log',level=logging.INFO)
         DEBUG = False
         deepgramAssistant = DeepgramAssistant(voice=DEFAULT_VOICE)
         
@@ -101,6 +104,7 @@ def main():
         deepgramAssistant.speak(assistantMessage)
         audio.play('./talk.wav')
     except Exception as e:
+        logger.exception(e)
         print(e)
 
 if __name__ == "__main__":
