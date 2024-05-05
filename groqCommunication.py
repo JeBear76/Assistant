@@ -30,6 +30,12 @@ class GroqAssistant:
         self.client = Groq(
             api_key=os.getenv("GROQ_API_KEY"),
         )
+        self.conversationMessages = [
+                {
+                    "role": "system",
+                    "content": "you are a helpful assistant. you will limit your answer to the necessary information and not provide any unnecessary information."
+                }
+            ]
 
     def chat(self, message):
         """
@@ -43,24 +49,31 @@ class GroqAssistant:
 
         """
         logger.info(f"Sending chat message: {message}")
+        
+        self.conversationMessages.append(
+            {
+                "role": "user",
+                "content": message
+            }
+        )
+        
         chat_completion = self.client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": "you are a helpful assistant. you will limit your answer to the necessary information and not provide any unnecessary information."
-                },
-                {
-                    "role": "user",
-                    "content": message,                    
-                }
-            ],
+            messages=self.conversationMessages,
             model="mixtral-8x7b-32768",
             max_tokens=256,
             temperature=1.0,
             top_p=1.0,
         )
+        
         logger.info(f"Received chat response:\n{chat_completion}")
+        
         if self.Debug:
             print(chat_completion)
-
+        
+        self.conversationMessages.append(
+            {
+                "role": "assistant",
+                "content": chat_completion.choices[0].message.content
+            }
+        )
         return chat_completion.choices[0].message.content
