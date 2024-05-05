@@ -3,6 +3,13 @@
 - [deepgram](https://deepgram.com/)
 - [groq](https://groq.com/)
 
+## Getting Started
+In your working directory, create a **.env** file and add the following lines to it
+```
+DEEPGRAM_API_KEY=<your deepgram api key>
+GROQ_API_KEY=<your groq api key>
+```
+
 ## Python dependencies
 - `pip install python-dotenv`
 - `pip install deepgram-sdk`

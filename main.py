@@ -1,4 +1,6 @@
 import argparse
+import logging
+
 from dotenv import load_dotenv
 from audio import Audio
 from record import Recorder, selectMicrophone
@@ -7,13 +9,21 @@ from groqCommunication import GroqAssistant
 
 # from pynput import keyboard
 
+DEFAULT_GREETING = 'What do you want? I\'m busy!'
+DEFAULT_VOICE = 'aura-helios-en'
+
 parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument(
     '-s', '--select_device', action='store_const', const=1,
-    help='select a device from a list of audio devices')
+    help='select a device from a list of audio devices'
+)
 parser.add_argument(
-    '-v', '--voice', action='store', default='aura-helios-en',
+    '-v', '--voice', action='store', default=DEFAULT_VOICE,
     help='change the voice to the assistant'
+)
+parser.add_argument(
+    '-g', '--greet', action='store', default=DEFAULT_GREETING,
+    help='change the assistant\'s greeting message'
 )
 args, remaining = parser.parse_known_args()
 
@@ -53,9 +63,10 @@ def main():
     """
     try:
         DEBUG = False
-        deepgramAssistant = DeepgramAssistant(voice="aura-helios-en")
-        if args.voice != 'aura-helios-en':
-            greeting = 'What do you want? I\'m busy!' 
+        deepgramAssistant = DeepgramAssistant(voice=DEFAULT_VOICE)
+        
+        if args.voice != DEFAULT_VOICE or args.greet != DEFAULT_GREETING:
+            greeting = args.greet
             deepgramAssistant.changeVoice(args.voice)           
             deepgramAssistant.speak(greeting, './greet.wav')
 
@@ -83,11 +94,11 @@ def main():
         if DEBUG:
             print(chatMessage)
         
-        groqResponse = groqAssistant.chat(chatMessage)
+        assistantMessage = groqAssistant.chat(chatMessage)
         if DEBUG:
-            print(groqResponse)
+            print(assistantMessage)
 
-        deepgramAssistant.speak(groqResponse)
+        deepgramAssistant.speak(assistantMessage)
         audio.play('./talk.wav')
     except Exception as e:
         print(e)

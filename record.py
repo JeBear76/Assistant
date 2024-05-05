@@ -41,9 +41,10 @@ class Recorder:
         samplerate (int): The sample rate of the audio being recorded.
     """
 
-    def __init__(self, device=1, channels=2, samplerate=44100):
+    def __init__(self, device=1, channels=2, samplerate=44100, DEBUG=False):
         sd.default.device = device
-        print(f'default microphone:{sd.default.device}')
+        if DEBUG:
+            print(f'default microphone:{sd.default.device}')
         self.q = queue.Queue()
         self.device = device
         self.channels = channels
