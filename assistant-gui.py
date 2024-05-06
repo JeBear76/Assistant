@@ -13,9 +13,6 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-def on_activate_h():
-     print('<ctrl>+<alt>+h pressed')
-
 def on_activate_i():
      print('<ctrl>+<alt>+i pressed')
         
