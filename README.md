@@ -12,6 +12,7 @@ GROQ_API_KEY=<your groq api key>
 
 ## Python dependencies
 - `sudo apt install python3-dotenv`
+- `sudo apt-get install python3-pyaudio`
 - `pip install python-dotenv`
 - `sudo apt install python3-tk`
 - `pip install customtkinter`
